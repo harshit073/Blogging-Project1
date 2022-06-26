@@ -374,11 +374,13 @@ const deleteBlog = async function (req, res) {
 const deleteBlogByQuerry = async function (req, res) {
     try {
         const data = req.query
+        const authorId=req.body
+        data.authorId=authorId.authorId
 
         if (Object.keys(data).length == 0) return res.status(400).send({ status: false, msg: "data required" })
         //console.log(data)
         data.isDeleted = false
-        console.log(data)
+        console.log("data",data)
 
         const toCheckQuery = await blogModel.find(data)
         //console.log(toCheckQuery[0].subcategory)
@@ -388,20 +390,22 @@ const deleteBlogByQuerry = async function (req, res) {
         if (toCheckQuery.length == 0) { return res.status(404).send({ msg: "no data exist" }) }
 
         
-//====================authorization===========================
-        tocheckauthorized = false
-        for (i = 0; i < toCheckQuery.length; i++) {
-            console.log("in for")
-            if (req.authorlogedin.ObjectId == toCheckQuery[i].authorId) {
-                console.log("in if")
-                authorId = toCheckQuery[i].authorId
+// //====================authorization===========================
+//         tocheckauthorized = false
+//         for (i = 0; i < toCheckQuery.length; i++) {
+//             console.log("in for")
+//             if (req.authorlogedin.ObjectId == toCheckQuery[i].authorId) {
+//                 console.log("in if")
+//                 authorId = toCheckQuery[i].authorId
 
-                tocheckauthorized = true
-            }
-        }
-        console.log(tocheckauthorized)
-        if (tocheckauthorized == false) { return res.status(403).send({ msg: "not authorized sorry :( " }) }
-        data.authorId = authorId  // toCheckQuery may give multiple data from diff author but we have to delete particular author book so we put that authorId in data object and then delete in line  411.
+//                 tocheckauthorized = true
+//             }
+//         }
+//         console.log(tocheckauthorized)
+//         if (tocheckauthorized == false) { return res.status(403).send({ msg: "not authorized sorry :( " }) }
+//         data.authorId = authorId  // toCheckQuery may give multiple data from diff author but we have to delete particular author book so we put that authorId in data object and then delete in line  411.
+//  //=======================================================================
+
 
         const blogDeleted = await blogModel.updateMany(data, { isDeleted: true }, { new: true })
         //console.log(blogDeleted)

@@ -19,27 +19,27 @@ const authentication = async function (req, res, next) {
     }
 }
 
+
+
+const autherization = async function (req, res, next) {
+    try {
+        // const token = req.headers['x-api-key']
+        //const validToken = jwt.verify(token, "Group-15-Project_1")
+        let authorId = req.body.authorId
+        console.log("priniting autorId for authorization", authorId)
+        if (authorId == null) { return res.status(400).send("plzz give authorId for authorization in body") }
+        //console.log(validToken, "Sucess")
+        if (req.authorlogedin.ObjectId != authorId) { return res.status(403).send("Not Authorize user") }
+        // res.send("Sucess")
+        next()
+    }
+    catch (err) {
+        return res.status(500).send(err.message)
+    }
+}
+
 module.exports.authentication = authentication;
-
-// const autherization = async function (req, res, next) {
-//     try {
-//         // const token = req.headers['x-api-key']
-//         //const validToken = jwt.verify(token, "Group-15-Project_1")
-//         let authorId = req.body.authorId
-//         console.log("priniting autorId for authorization", authorId)
-//         if (authorId == null) { return res.status(400).send("plzz give authorId for authorization") }
-//         //console.log(validToken, "Sucess")
-//         if (req.authorlogedin.ObjectId != authorId) { return res.status(403).send("Not Authorize user") }
-//         // res.send("Sucess")
-//         next()
-//     }
-//     catch (err) {
-//         return res.status(500).send(err.message)
-//     }
-// }
-
-// module.exports.authentication = authentication;
-//module.exports.autherization = autherization;
+module.exports.autherization = autherization;
 
 // const paramsAutherization = async function (req, res, next) {
 //     try {
